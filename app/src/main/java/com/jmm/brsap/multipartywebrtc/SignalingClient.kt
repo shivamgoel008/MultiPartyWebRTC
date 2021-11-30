@@ -32,7 +32,6 @@ class SignalingClient private constructor() {
             @Throws(CertificateException::class)
             override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
             }
-
             override fun getAcceptedIssuers(): Array<X509Certificate> {
                 return arrayOf()
             }
@@ -45,13 +44,19 @@ class SignalingClient private constructor() {
             sslContext.init(null, trustAll, null)
             IO.setDefaultHostnameVerifier { hostname: String?, session: SSLSession? -> true }
             IO.setDefaultSSLContext(sslContext)
-            socket = IO.socket("https://192.168.1.97:8080")
+            socket = IO.socket("https://13.233.150.222:3478")
             socket.connect()
+
             socket.emit("create or join", room)
+
             socket.on("created", Emitter.Listener { args: Array<Any?>? ->
                 Log.e("chao", "room created:" + socket.id())
+//                Log.d("SHIVAMsadasdsa","ASJ")
                 callback.onCreateRoom()
             })
+
+            Log.d("SHIVAM","ASJ")
+
             socket.on("full",
                 Emitter.Listener { args: Array<Any?>? ->
                     Log.e(
@@ -59,10 +64,13 @@ class SignalingClient private constructor() {
                         "room full"
                     )
                 })
+
             socket.on("join", Emitter.Listener { args: Array<Any> ->
                 Log.e("chao", "peer joined " + Arrays.toString(args))
                 callback.onPeerJoined(args[1].toString())
             })
+
+            Log.d("SHIVAM2","ASJ")
             socket.on("joined", Emitter.Listener { args: Array<Any?>? ->
                 Log.e("chao", "self joined:" + socket.id())
                 callback.onSelfJoined()
@@ -74,12 +82,17 @@ class SignalingClient private constructor() {
                         "log call " + Arrays.toString(args)
                     )
                 })
+
+            Log.d("SHIVAM3","ASJ")
             socket.on("bye", Emitter.Listener { args: Array<Any> ->
                 Log.e("chao", "bye " + args[0])
                 callback.onPeerLeave(args[0] as String)
             })
+
+            Log.d("SHIVAM4","ASJ")
             socket.on("message", Emitter.Listener { args: Array<Any?> ->
                 Log.e("chao", "message " + Arrays.toString(args))
+//                println("FUCK YOU ")
                 val arg = args[0]
                 if (arg is String) {
                 } else if (arg is JSONObject) {
@@ -96,10 +109,13 @@ class SignalingClient private constructor() {
             })
         } catch (e: NoSuchAlgorithmException) {
             e.printStackTrace()
+            println("SHIVAM")
         } catch (e: KeyManagementException) {
             e.printStackTrace()
+            println("SHIVAM")
         } catch (e: URISyntaxException) {
             e.printStackTrace()
+            println("SHIVAM")
         }
     }
 

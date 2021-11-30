@@ -2,9 +2,11 @@ package com.jmm.brsap.multipartywebrtc
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import org.json.JSONObject
 import org.webrtc.*
 import org.webrtc.PeerConnection.IceServer
+import java.lang.Math.log
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -19,20 +21,24 @@ class MainActivity : AppCompatActivity(), SignalingClient.Callback {
     private lateinit var remoteViews: Array<SurfaceViewRenderer>
     var remoteViewsIndex = 0
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         peerConnectionMap = HashMap()
-        /*iceServers = ArrayList()
-        iceServers.add(IceServer.builder("stun:stun.l.google.com:19302").createIceServer())*/
+//        iceServers = ArrayList()
+//        iceServers.add(IceServer.builder("stun:stun.l.google.com:19302").createIceServer())
 
         iceServers = listOf(
-            IceServer.builder("3.109.143.89:3478")
-                .setUsername("Admin ")
+            IceServer.builder("13.233.150.222:3478")
+                .setUsername("Admin")
                 .setPassword("password")
                 .createIceServer()
         )
+
+
+//        Log.e("chao", "room created:")
+
+        println("RUNNING")
         eglBaseContext = EglBase.create().eglBaseContext
 
         // create PeerConnectionFactory
@@ -114,6 +120,7 @@ class MainActivity : AppCompatActivity(), SignalingClient.Callback {
     }
 
     override fun onCreateRoom() {}
+
     override fun onPeerJoined(socketId: String) {
         val peerConnection = getOrCreatePeerConnection(socketId)
         peerConnection.createOffer(object : SdpAdapter("createOfferSdp:$socketId") {
